@@ -1,4 +1,5 @@
 import { getBooks, createBook } from "@/controllers/booksController";
+import { redirect } from "next/navigation";
 
 export async function GET() {
   console.log("entramosw en get");
@@ -7,8 +8,11 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const body = await request.json();
-  console.log(body);
-  const newBook = await createBook(body);
-  return Response.json(newBook);
+  const formData = await request.formData();
+
+  const title = String(formData.get("title"));
+
+  await createBook(title);
+
+  redirect("/libros");
 }

@@ -5,7 +5,7 @@ export default function Navbar() {
     <nav>
       <Link href="/">Inicio</Link>
       {" | "}
-      <Link href="/books">Libros</Link>
+      <Link href="/libros">Libros</Link>
     </nav>
   );
 }

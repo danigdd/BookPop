@@ -1,8 +1,8 @@
+import { getBooks } from "@/controllers/booksController";
 import { Book } from "@/types/book";
 
 export default async function BooksPage() {
-  const booksAPIResponse = await fetch("http://localhost:3000/api/books");
-  const books = await booksAPIResponse.json(); //array of book objects
+  const books = await getBooks();
   return (
     <main>
       <h1>Todos los libros</h1>
@@ -14,6 +14,7 @@ export default async function BooksPage() {
           </li>
         ))}
       </ul>
+      <a href="/libros/crear">Crear un libro</a>
     </main>
   );
 }
