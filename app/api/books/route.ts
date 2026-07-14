@@ -2,7 +2,6 @@ import { getBooks, createBook } from "@/controllers/booksController";
 import { redirect } from "next/navigation";
 
 export async function GET() {
-  console.log("entramosw en get");
   const books = await getBooks();
   return Response.json(books);
 }
