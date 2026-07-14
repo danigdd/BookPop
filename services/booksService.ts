@@ -11,3 +11,7 @@ export async function createBookService(book: string) {
   console.log("inserted");
   return;
 }
+
+export async function deleteBookService(id: string) {
+  await pool.query("DELETE FROM books WHERE id = $1", [id]);
+}
