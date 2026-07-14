@@ -1,22 +1,15 @@
-const books = [
-  { id: 1, title: "Dune" },
-  { id: 2, title: "1984" },
-];
+import pool from "@/lib/db";
 
 function addBookToLibrary(book: { title: string; id: number }) {
-  books.push(book);
-  console.log("Book added to local library");
+  /*todo*/
 }
 
 export async function getBooks() {
-  return books;
+  const result = await pool.query("SELECT * FROM books");
+  console.log(result.rows);
+  return result.rows;
 }
 
 export async function createBook(book: { title: string }) {
-  console.log("Creating a book...");
-  const bookToAdd = { id: books.length + 1, ...book };
-  addBookToLibrary(bookToAdd);
-
-  console.log("Book published online!");
-  return bookToAdd;
+  /*todo*/
 }

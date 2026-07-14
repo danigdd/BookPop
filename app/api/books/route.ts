@@ -1,6 +1,7 @@
 import { getBooks, createBook } from "@/controllers/booksController";
 
 export async function GET() {
+  console.log("entramosw en get");
   const books = await getBooks();
   return Response.json(books);
 }
