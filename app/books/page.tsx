@@ -1,3 +1,5 @@
+import { Book } from "@/types/book";
+
 export default async function BooksPage() {
   const booksAPIResponse = await fetch("http://localhost:3000/api/books");
   const books = await booksAPIResponse.json(); //array of book objects
@@ -6,7 +8,7 @@ export default async function BooksPage() {
       <h1>Todos los libros</h1>
 
       <ul>
-        {books.map((book: { title: string; id: number }) => (
+        {books.map((book: Book) => (
           <li key={book.id}>
             Libro {book.title} con ID {book.id}
           </li>
