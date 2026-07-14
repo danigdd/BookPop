@@ -1,6 +1,13 @@
+import { getBooks, createBook } from "@/controllers/booksController";
+
 export async function GET() {
-  return Response.json([
-    { id: 1, title: "Dune" },
-    { id: 2, title: "1984" },
-  ]);
+  const books = await getBooks();
+  return Response.json(books);
+}
+
+export async function POST(request: Request) {
+  const body = await request.json();
+  console.log(body);
+  const newBook = await createBook(body);
+  return Response.json(newBook);
 }
