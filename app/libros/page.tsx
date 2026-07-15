@@ -1,3 +1,4 @@
+import DeleteBookButton from "@/components/DeleteBookButton";
 import { getBooks } from "@/controllers/booksController";
 import { Book } from "@/types/book";
 
@@ -12,9 +13,7 @@ export default async function BooksPage() {
           return (
             <li key={book.id}>
               Libro {book.title} con ID {book.id}
-              <form method="POST" action={`/api/books/${book.id}/delete`}>
-                <button type="submit">Eliminar</button>
-              </form>
+              <DeleteBookButton id={book.id} />
             </li>
           );
         })}
