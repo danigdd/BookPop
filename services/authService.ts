@@ -6,9 +6,9 @@ export async function registerUserService(userData: {
   password: string;
 }) {
   console.log(userData);
-  const hashedPassword = await bcrypt.hash(userData.password, 15);
+  const hashedPassword = await bcrypt.hash(userData.password, 8);
   const result = await pool.query(
-    "INSERT INTO users(email, password_hash) VALUES ($1, $2) RETURNING *",
+    "INSERT INTO users(email, password_hash) VALUES ($1, $2) RETURNING id, email",
     [userData.email, hashedPassword],
   );
 
@@ -24,19 +24,17 @@ export async function loginUserService(userData: {
     [userData.email],
   );
 
-  if (result.rows.length === 0) {
-    throw new Error("USER_NOT_FOUND");
-  }
-
-  const hashStored = result.rows[0].password_hash;
+  const fakeHash =
+    "$2b$08$WZC4ubhriOeskXIJMPq0ee1Sw6uXPTiOFc8PPLMklaPG4VzktJQgm";
+  const hashStored = result.rows[0]?.password_hash ?? fakeHash;
 
   const passwordCorrect = await bcrypt.compare(userData.password, hashStored);
-  if (!passwordCorrect) {
-    throw new Error("INVALID_PASSWORD");
+  if (!passwordCorrect || !result.rows[0]) {
+    throw new Error("INVALID_CREDENTIALS");
   }
 
   const correctResult = await pool.query(
-    "SELECT * FROM users WHERE email = $1",
+    "SELECT id, email, created_at FROM users WHERE email = $1",
     [userData.email],
   );
   const user = correctResult.rows[0];
