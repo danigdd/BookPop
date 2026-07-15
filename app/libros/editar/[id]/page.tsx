@@ -1,3 +1,4 @@
+import EditBookForm from "@/components/EditBookForm";
 import { getBookById } from "@/controllers/booksController";
 
 export default async function EditBook({
@@ -8,10 +9,5 @@ export default async function EditBook({
   const { id } = await params;
   const book = await getBookById(id);
   const bookTitle = book[0].title;
-  return (
-    <form>
-      <label>Nombre nuevo del libro</label>
-      <input placeholder={`${bookTitle}...`}></input>
-    </form>
-  );
+  return <EditBookForm id={Number(id)} title={bookTitle}></EditBookForm>;
 }
