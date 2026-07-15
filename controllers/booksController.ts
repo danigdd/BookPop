@@ -2,6 +2,7 @@ import {
   createBookService,
   getBooksService,
   deleteBookService,
+  getBookByIdService,
 } from "@/services/booksService";
 
 export async function getBooks() {
@@ -14,4 +15,8 @@ export async function createBook(book: string) {
 
 export async function deleteBook(id: string) {
   return deleteBookService(id);
+}
+
+export async function getBookById(id: string) {
+  return getBookByIdService(id);
 }
