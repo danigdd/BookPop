@@ -1,4 +1,4 @@
-import { deleteBook } from "@/controllers/booksController";
+import { deleteBook, editBook } from "@/controllers/booksController";
 import { redirect } from "next/navigation";
 
 export async function DELETE(
@@ -16,9 +16,9 @@ export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  console.log("ENTRAMOS EN PATCH?");
   const { id } = await params;
   const updatedTitle = await request.json();
-  console.log(updatedTitle.title);
-  redirect("/libros");
+
+  await editBook(updatedTitle.title, id);
+  return Response.json({ message: "Updated succesufl", id, updatedTitle });
 }

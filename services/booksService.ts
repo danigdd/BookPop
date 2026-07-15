@@ -1,7 +1,7 @@
 import pool from "@/lib/db";
 
 export async function getBooksService() {
-  const result = await pool.query("SELECT * FROM books");
+  const result = await pool.query("SELECT * FROM books ORDER BY id ASC");
   return result.rows;
 }
 
@@ -18,4 +18,8 @@ export async function deleteBookService(id: string) {
 export async function getBookByIdService(id: string) {
   const result = await pool.query("SELECT * FROM books WHERE id = $1", [id]);
   return result.rows;
+}
+
+export async function editBookService(title: string, id: string) {
+  await pool.query("UPDATE books SET title = $1 WHERE id = $2", [title, id]);
 }
