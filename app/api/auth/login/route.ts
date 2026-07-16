@@ -1,15 +1,28 @@
 import { loginUser } from "@/controllers/authController";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
     const user = await loginUser(body);
-    return Response.json({
-      email: user.email,
-      id: user.id,
-      created_at: user.created_at,
+
+    console.log(user);
+
+    const response = NextResponse.json({
+      message: "Login succesful",
     });
+
+    response.cookies.set("sessionToken", user.sessionId, {
+      httpOnly: true,
+      secure: false, //PRODUCTION
+      sameSite: "lax",
+      path: "/",
+      maxAge: 30 * 24 * 60 * 60,
+    });
+
+    return response;
   } catch (error) {
     return Response.json({ message: "Invalid Credentials" }, { status: 401 });
   }

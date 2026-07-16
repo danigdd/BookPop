@@ -4,11 +4,12 @@ export async function registerUser(userData: {
   email: string;
   password: string;
 }) {
-  const user = registerUserService(userData);
+  const user = await registerUserService(userData);
   return user;
 }
 
 export async function loginUser(userData: { email: string; password: string }) {
-  const user = loginUserService(userData);
-  return user;
+  const result = await loginUserService(userData);
+
+  return result;
 }

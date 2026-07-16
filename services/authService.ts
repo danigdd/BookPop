@@ -1,5 +1,6 @@
 import pool from "@/lib/db";
 import bcrypt from "bcryptjs";
+import { createSession } from "./sessionsService";
 
 export async function registerUserService(userData: {
   email: string;
@@ -38,5 +39,9 @@ export async function loginUserService(userData: {
     [userData.email],
   );
   const user = correctResult.rows[0];
-  return user;
+
+  const session = await createSession(user.id);
+  return {
+    sessionId: session.session_id,
+  };
 }
