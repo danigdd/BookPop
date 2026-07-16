@@ -1,6 +1,8 @@
 import pool from "@/lib/db";
 import bcrypt from "bcryptjs";
-import { createSession } from "./sessionsService";
+//import { createSession } from "./sessionsService";
+import jwt from "jsonwebtoken";
+
 import { getSessionUser } from "./sessionsService";
 
 export async function registerUserService(userData: {
@@ -36,14 +38,19 @@ export async function loginUserService(userData: {
   }
 
   const correctResult = await pool.query(
-    "SELECT id, email, created_at FROM users WHERE email = $1",
+    "SELECT id, role FROM users WHERE email = $1",
     [userData.email],
   );
   const user = correctResult.rows[0];
 
-  const session = await createSession(user.id);
+  const secret = process.env.ACCESS_TOKEN_SECRET;
+  if (!secret) {
+    throw new Error("TOKEN NOT DEFINED");
+  }
+  //CHANGE TO JWT AUTH
+  const jwtToken = jwt.sign(user, secret);
   return {
-    sessionId: session.session_id,
+    jwtToken,
   };
 }
 

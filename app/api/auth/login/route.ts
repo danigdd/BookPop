@@ -8,13 +8,11 @@ export async function POST(request: NextRequest) {
 
     const user = await loginUser(body);
 
-    console.log(user);
-
     const response = NextResponse.json({
       message: "Login succesful",
     });
 
-    response.cookies.set("auth_token", user.sessionId, {
+    response.cookies.set("jwt_token", user.jwtToken, {
       httpOnly: true,
       secure: false, //PRODUCTION
       sameSite: "lax",
