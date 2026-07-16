@@ -1,6 +1,7 @@
 import pool from "@/lib/db";
 import bcrypt from "bcryptjs";
 import { createSession } from "./sessionsService";
+import { getSessionUser } from "./sessionsService";
 
 export async function registerUserService(userData: {
   email: string;
@@ -46,4 +47,7 @@ export async function loginUserService(userData: {
   };
 }
 
-export async function requireAuth() {}
+export async function requireAuth(tokenId: string | null) {
+  const user = await getSessionUser(tokenId);
+  return user.role == "admin";
+}

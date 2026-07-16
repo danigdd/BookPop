@@ -1,5 +1,5 @@
 import { deleteBook, editBook } from "@/controllers/booksController";
-import { getSessionUser } from "@/services/sessionsService";
+import { requireAuth } from "@/services/authService";
 import { getCookieValue } from "@/utils/cookies";
 import { redirect } from "next/navigation";
 
@@ -9,13 +9,12 @@ export async function DELETE(
 ) {
   const cookieHeader = request.headers.get("Cookie");
   const tokenId = getCookieValue(cookieHeader, "auth_token");
-  const user = await getSessionUser(tokenId);
-  //test
-  if (user.id != 6) {
+  const authorized = await requireAuth(tokenId);
+
+  if (authorized) {
     return Response.json({ message: "Delete not authorized" }, { status: 401 });
   }
 
-  console.log("Autorizacion completa");
   const { id } = await params;
 
   await deleteBook(id);

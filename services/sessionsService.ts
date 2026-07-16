@@ -27,7 +27,7 @@ export async function getSessionUser(tokenId: string | null) {
   const user_id = session.rows[0].user_id;
 
   const user = await pool.query(
-    "SELECT id, email, created_at FROM users WHERE id = $1",
+    "SELECT id, email, created_at, role FROM users WHERE id = $1",
     [user_id],
   );
 
