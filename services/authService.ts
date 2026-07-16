@@ -49,5 +49,5 @@ export async function loginUserService(userData: {
 
 export async function requireAuth(tokenId: string | null) {
   const user = await getSessionUser(tokenId);
-  return user.role == "admin";
+  return user;
 }

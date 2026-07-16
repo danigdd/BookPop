@@ -9,10 +9,9 @@ export async function DELETE(
 ) {
   const cookieHeader = request.headers.get("Cookie");
   const tokenId = getCookieValue(cookieHeader, "auth_token");
-  const authorized = await requireAuth(tokenId);
-
-  if (authorized) {
-    return Response.json({ message: "Delete not authorized" }, { status: 401 });
+  const user = await requireAuth(tokenId);
+  if (user.role !== "admin") {
+    return Response.json({ message: "Delete not authorized" }, { status: 403 });
   }
 
   const { id } = await params;
