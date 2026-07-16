@@ -45,3 +45,5 @@ export async function loginUserService(userData: {
     sessionId: session.session_id,
   };
 }
+
+export async function requireAuth() {}

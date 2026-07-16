@@ -11,10 +11,13 @@ export async function createSession(userId: number) {
   return result.rows[0];
 }
 
-export async function getSessionUser(token_id: string) {
+export async function getSessionUser(tokenId: string | null) {
+  if (!tokenId) {
+    throw new Error("NO SESSION TOKEN");
+  }
   const session = await pool.query(
-    "SELECT user_id FROM sessions WHERE session_id = $1",
-    [token_id],
+    "SELECT user_id FROM sessions WHERE session_id = $1 AND expires_at > NOW()",
+    [tokenId],
   );
 
   if (session.rows.length === 0) {
@@ -23,7 +26,10 @@ export async function getSessionUser(token_id: string) {
 
   const user_id = session.rows[0].user_id;
 
-  const user = await pool.query("SELECT * FROM users WHERE id = $1", [user_id]);
+  const user = await pool.query(
+    "SELECT id, email, created_at FROM users WHERE id = $1",
+    [user_id],
+  );
 
   if (user.rows.length === 0) {
     throw new Error("USER DOES NOT EXIST");
