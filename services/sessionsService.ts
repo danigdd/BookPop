@@ -10,3 +10,24 @@ export async function createSession(userId: number) {
   );
   return result.rows[0];
 }
+
+export async function getSessionUser(token_id: string) {
+  const session = await pool.query(
+    "SELECT user_id FROM sessions WHERE session_id = $1",
+    [token_id],
+  );
+
+  if (session.rows.length === 0) {
+    throw new Error("COOKIE DOES NOT EXIST");
+  }
+
+  const user_id = session.rows[0].user_id;
+
+  const user = await pool.query("SELECT * FROM users WHERE id = $1", [user_id]);
+
+  if (user.rows.length === 0) {
+    throw new Error("USER DOES NOT EXIST");
+  }
+
+  return user.rows[0];
+}

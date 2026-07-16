@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
       message: "Login succesful",
     });
 
-    response.cookies.set("sessionToken", user.sessionId, {
+    response.cookies.set("auth_token", user.sessionId, {
       httpOnly: true,
       secure: false, //PRODUCTION
       sameSite: "lax",
