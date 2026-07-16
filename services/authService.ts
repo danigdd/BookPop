@@ -1,9 +1,7 @@
 import pool from "@/lib/db";
 import bcrypt from "bcryptjs";
 //import { createSession } from "./sessionsService";
-import jwt from "jsonwebtoken";
-
-import { getSessionUser } from "./sessionsService";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 export async function registerUserService(userData: {
   email: string;
@@ -54,7 +52,16 @@ export async function loginUserService(userData: {
   };
 }
 
-export async function requireAuth(tokenId: string | null) {
-  const user = await getSessionUser(tokenId);
-  return user;
+export async function requireAuth(jwtToken: string | null) {
+  if (!jwtToken) {
+    throw new Error("TOKEN NOT EXISTS");
+  }
+  const secret = process.env.ACCESS_TOKEN_SECRET;
+  if (!secret) {
+    throw new Error("TOKEN NOT DEFINED");
+  }
+
+  const payload = jwt.verify(jwtToken, secret);
+  console.log(payload);
+  return payload;
 }

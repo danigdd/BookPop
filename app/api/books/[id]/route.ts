@@ -9,9 +9,9 @@ export async function DELETE(
 ) {
   try {
     const cookieHeader = request.headers.get("Cookie");
-    const tokenId = getCookieValue(cookieHeader, "auth_token");
-    const user = await requireAuth(tokenId);
-    if (user.role !== "admin") {
+    const jwtToken = getCookieValue(cookieHeader, "jwt_token");
+    const payload = await requireAuth(jwtToken);
+    if (payload.role !== "admin") {
       return Response.json(
         { message: "Delete not authorized" },
         { status: 403 },
