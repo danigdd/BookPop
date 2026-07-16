@@ -7,18 +7,25 @@ export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const cookieHeader = request.headers.get("Cookie");
-  const tokenId = getCookieValue(cookieHeader, "auth_token");
-  const user = await requireAuth(tokenId);
-  if (user.role !== "admin") {
-    return Response.json({ message: "Delete not authorized" }, { status: 403 });
+  try {
+    const cookieHeader = request.headers.get("Cookie");
+    const tokenId = getCookieValue(cookieHeader, "auth_token");
+    const user = await requireAuth(tokenId);
+    if (user.role !== "admin") {
+      return Response.json(
+        { message: "Delete not authorized" },
+        { status: 403 },
+      );
+    }
+
+    const { id } = await params;
+
+    await deleteBook(id);
+
+    return Response.json({ message: "Delete succesufl", id });
+  } catch (error) {
+    return Response.json({ message: "You are not logged in" }, { status: 401 });
   }
-
-  const { id } = await params;
-
-  await deleteBook(id);
-
-  return Response.json({ message: "Delete succesufl", id });
 }
 
 export async function PATCH(

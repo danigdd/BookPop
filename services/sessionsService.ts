@@ -37,3 +37,12 @@ export async function getSessionUser(tokenId: string | null) {
 
   return user.rows[0];
 }
+
+export async function deleteSessionUser(tokenId: string | null) {
+  if (!tokenId) {
+    throw new Error("NO SESSION TOKEN");
+  }
+
+  await pool.query("DELETE FROM sessions WHERE session_id = $1", [tokenId]);
+  return;
+}
