@@ -5,6 +5,8 @@ export function createJWT(payload: Record<string, unknown>) {
   if (!secret) {
     throw new Error("TOKEN_NOT_DEFINED");
   }
-  const jwt_token = jwt.sign(payload, secret);
+  const jwt_token = jwt.sign(payload, secret, {
+    expiresIn: "900s",
+  });
   return jwt_token;
 }
