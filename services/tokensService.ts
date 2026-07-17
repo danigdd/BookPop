@@ -8,11 +8,23 @@ export async function createRefreshToken(user: { id: string; role: string }) {
 
   const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
 
-  const hashedToken = await bcrypt.hash(refreshToken, 8);
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(refreshToken)
+    .digest("hex");
 
   await pool.query(
     "INSERT INTO refresh_tokens(token_hash, user_id, expires_at) VALUES ($1, $2, $3)",
     [hashedToken, user.id, expiresAt],
   );
   return refreshToken;
+}
+
+export async function getRefreshToken(hashedToken: string) {
+  const result = await pool.query(
+    "SELECT user_id, expires_at, revoked FROM refresh_tokens WHERE token_hash = $1",
+    [hashedToken],
+  );
+
+  return result.rows[0];
 }
