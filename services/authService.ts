@@ -2,12 +2,12 @@ import pool from "@/lib/db";
 import bcrypt from "bcryptjs";
 //import { createSession } from "./sessionsService";
 import jwt, { JwtPayload } from "jsonwebtoken";
+import { createRefreshToken } from "./tokensService";
 
 export async function registerUserService(userData: {
   email: string;
   password: string;
 }) {
-  console.log(userData);
   const hashedPassword = await bcrypt.hash(userData.password, 8);
   const result = await pool.query(
     "INSERT INTO users(email, password_hash) VALUES ($1, $2) RETURNING id, email",
@@ -45,10 +45,14 @@ export async function loginUserService(userData: {
   if (!secret) {
     throw new Error("TOKEN NOT DEFINED");
   }
-  //CHANGE TO JWT AUTH
+  //JWT TOKEN
   const jwtToken = jwt.sign(user, secret);
+
+  //REFRESH TOKEN
+  const refreshToken = await createRefreshToken(user);
   return {
     jwtToken,
+    refreshToken,
   };
 }
 
