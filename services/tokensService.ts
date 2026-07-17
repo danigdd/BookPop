@@ -20,11 +20,26 @@ export async function createRefreshToken(user: { id: string; role: string }) {
   return refreshToken;
 }
 
-export async function getRefreshToken(hashedToken: string) {
+export async function getRefreshToken(refreshToken: string) {
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(refreshToken)
+    .digest("hex");
   const result = await pool.query(
     "SELECT user_id, expires_at, revoked FROM refresh_tokens WHERE token_hash = $1",
     [hashedToken],
   );
 
   return result.rows[0];
+}
+
+export async function revokeRefreshToken(refreshToken: string) {
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(refreshToken)
+    .digest("hex");
+  await pool.query(
+    "UPDATE refresh_tokens SET revoked = TRUE WHERE token_hash = $1 ",
+    [hashedToken],
+  );
 }

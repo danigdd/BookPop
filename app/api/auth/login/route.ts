@@ -17,6 +17,14 @@ export async function POST(request: NextRequest) {
       secure: false, //PRODUCTION
       sameSite: "lax",
       path: "/",
+      maxAge: 15 * 60,
+    });
+
+    response.cookies.set("refresh_token", user.refreshToken, {
+      httpOnly: true,
+      secure: false, //PRODUCTION
+      sameSite: "lax",
+      path: "/",
       maxAge: 30 * 24 * 60 * 60,
     });
 

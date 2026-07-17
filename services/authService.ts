@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 //import { createSession } from "./sessionsService";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { createRefreshToken } from "./tokensService";
+import { createJWT } from "@/utils/tokens";
 
 export async function registerUserService(userData: {
   email: string;
@@ -41,12 +42,8 @@ export async function loginUserService(userData: {
   );
   const user = correctResult.rows[0];
 
-  const secret = process.env.ACCESS_TOKEN_SECRET;
-  if (!secret) {
-    throw new Error("TOKEN NOT DEFINED");
-  }
   //JWT TOKEN
-  const jwtToken = jwt.sign(user, secret);
+  const jwtToken = createJWT(user);
 
   //REFRESH TOKEN
   const refreshToken = await createRefreshToken(user);
