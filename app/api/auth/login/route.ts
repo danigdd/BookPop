@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
       httpOnly: true,
       secure: false, //PRODUCTION
       sameSite: "lax",
-      path: "/",
+      path: "/api/auth/refresh",
       maxAge: 30 * 24 * 60 * 60,
     });
 

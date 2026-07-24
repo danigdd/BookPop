@@ -4,7 +4,6 @@ export async function apiFetch(
   retry = true,
 ) {
   const response = await fetch(url, options);
-
   if (response.status !== 401 || !retry) {
     return response;
   }

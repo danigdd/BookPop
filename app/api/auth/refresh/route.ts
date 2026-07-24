@@ -12,7 +12,6 @@ import { NextResponse } from "next/server";
 export async function POST(request: Request) {
   const cookieHeader = request.headers.get("Cookie");
   const refreshCookie = getCookieValue(cookieHeader, "refresh_token");
-
   if (!refreshCookie) {
     throw new Error("REFRESH_TOKEN_NOT_SENT");
   }
